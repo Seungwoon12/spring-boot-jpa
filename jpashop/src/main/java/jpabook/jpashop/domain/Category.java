@@ -3,6 +3,7 @@ package jpabook.jpashop.domain;
 import jpabook.jpashop.domain.item.Item;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.dialect.OracleTypesHelper;
 
 import javax.persistence.*;
 import javax.print.attribute.standard.MediaSize;
@@ -28,11 +29,19 @@ public class Category {
             inverseJoinColumns = @JoinColumn(name = "item_id"))
     private List<Item> items = new ArrayList<>();
 
-    @ManyToOne
+    // @XToOne(@OneToOne, @ManyToOne은 default가 FetchType.EAGER인데 무조건 이걸 FetchType.LAZY로 다 바꿔줘야함
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Category parent;
 
     @OneToMany(mappedBy = "parent")
     private List<Category> child = new ArrayList<>();
+
+    //== 연관관계 메서드 ==//
+    public void addChildCategory(Category child) {
+        this.child.add(child);
+        child.setParent(this);
+    }
+
 }
 
