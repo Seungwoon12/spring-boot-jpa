@@ -1,5 +1,7 @@
 package jpabook.jpashop;
 
+import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,23 +20,23 @@ public class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
-    @Test
-    @Transactional
-    @Rollback(false) //rollback 안하고 그냥 데이터 넣겠다.
-    public void testMember() throws Exception {
-        //given
-        Member member = new Member();
-        member.setUsername("memberA");
-
-        //when
-        Long savedId = memberRepository.save(member);
-        Member findMember = memberRepository.find(savedId);
-
-        //then
-        Assertions.assertThat(findMember.getId()).isEqualTo(member.getId());
-        Assertions.assertThat(findMember.getUsername()).isEqualTo(member.getUsername());
-        Assertions.assertThat(findMember).isEqualTo(member);
-        //영속성 컨텍스트에서 식별자가 같으면 같은 엔티티로 인식한다.
-        System.out.println("findMember == member: " + (findMember == member));
-    }
+//    @Test
+//    @Transactional
+//    @Rollback(false) //rollback 안하고 그냥 데이터 넣겠다.
+//    public void testMember() throws Exception {
+//        //given
+//        Member member = new Member();
+//        member.setUsername("memberA");
+//
+//        //when
+//        Long savedId = memberRepository.save(member);
+//        Member findMember = memberRepository.find(savedId);
+//
+//        //then
+//        Assertions.assertThat(findMember.getId()).isEqualTo(member.getId());
+//        Assertions.assertThat(findMember.getUsername()).isEqualTo(member.getUsername());
+//        Assertions.assertThat(findMember).isEqualTo(member);
+//        //영속성 컨텍스트에서 식별자가 같으면 같은 엔티티로 인식한다.
+//        System.out.println("findMember == member: " + (findMember == member));
+//    }
 }
