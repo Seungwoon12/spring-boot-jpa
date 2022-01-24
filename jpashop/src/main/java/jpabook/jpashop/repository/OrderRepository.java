@@ -110,4 +110,31 @@ public class OrderRepository {
     }
 
 
+    public List<Order> findAllWithItem() {
+        /**
+         * distinct 넣어주면 Order 가져올 때 id가 같으면 중복 제거 해줌(이건 JPA에서 제공하는 기능임)
+         * cf) 실제 db 쿼리에선 JPA1BOOK, JPA2BOOK 이런식으로 데이터 값이 다른게 있기 때문에 ID가 같아도 중복 제거가 안됨
+         *
+         * 중요!  Order와 OrderItem 관계처럼 1대다 관계에서는 페치 조인으로 페이징 절대 하면 안됨. 왜냐하면
+         * 예를를어 데이터가 1만건이라고 치면 1만건을 다 퍼올려서 메모리에서 sorting 하기 때문에 OutOfMemory 날 가능성이 큼
+         */
+        return em.createQuery(
+                        "select distinct o from Order o" +
+                                " join fetch o.member m" +
+                                " join fetch o.delivery d" +
+                                " join fetch o.orderItems oi" +
+                                " join fetch oi.item i", Order.class)
+                .getResultList();
+    }
+
+    public List<Order> findAllWithMemberDelivery(int offset, int limit) {
+        return em.createQuery(
+                        "select o from Order o" +
+                                " join fetch o.member m" +
+                                " join fetch o.delivery d", Order.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+
+    }
 }
