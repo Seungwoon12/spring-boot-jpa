@@ -6,13 +6,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringRunner.class) // junit을 스프링과 함께 실행할거야
 @SpringBootTest // 스프링 부트를 띄운 상태로 테스트하기 위해 필요. 스프링 컨테이너 안에서 테스트 돌리는거
@@ -32,11 +32,11 @@ public class MemberServiceTest {
 
         //when
         Long savedId = memberService.join(member);
-        Member findMember = memberRepository.findOne(savedId);
+        Member findMember = memberRepository.findById(savedId).get();
 
         //then
         em.flush(); // flush는 영속성 컨텍스트에 있는 것을 DB에 반      영하는 것임
-        assertEquals(member, memberRepository.findOne(savedId));
+        assertEquals(member, memberRepository.findById(savedId));
 
 
     }
